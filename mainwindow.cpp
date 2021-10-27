@@ -5,16 +5,45 @@
 #include <sstream>
 
 
+const QVector<int> signPages = {1, 2, 3};
+const QVector<int> verifyPages = {4, 5, 6};
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    ui->stepsWidget->setVisible(false);
+    ui->btnNextStep->setVisible(false);
+
+    fileDialog = new QFileDialog(this);
+    fileDialog->setFileMode(QFileDialog::AnyFile);
+
     connect(ui->btnNextStep, SIGNAL(clicked()), this, SLOT(nextClick()));
     connect(this, &MainWindow::pageChanged, ui->stepsWidget, &StepWidget::setStep);
-    emit pageChanged(0);
     connect(ui->btnCreateSignature, SIGNAL(clicked()), this, SLOT(createSignatureClick()));
+
+    connect(ui->btnSignMode, &QPushButton::clicked, this, [=]() {
+        ui->stack->setCurrentIndex(signPages[0]);
+        ui->stepsWidget->setVisible(true);
+        setWindowTitle("Signing a new message");
+        emit pageChanged(0);
+        emit pageCountChanged(signPages.size());
+    });
+
+    connect(ui->btnVerifyMode, &QPushButton::clicked, this, [=]() {
+        ui->stack->setCurrentIndex(verifyPages[0]);
+        ui->stepsWidget->setVisible(true);
+        setWindowTitle("Verifying signature");
+        emit pageChanged(0);
+        emit pageCountChanged(verifyPages.size());
+    });
+
+    connect(ui->btnSelectFile, &QPushButton::clicked, this, [=]() {
+        fileDialog->exec();
+    });
 }
 
 MainWindow::~MainWindow()

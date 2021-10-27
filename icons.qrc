@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/sign.svg</file>
+        <file>icons/verify.svg</file>
+    </qresource>
+</RCC>
