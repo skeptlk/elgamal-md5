@@ -48,37 +48,20 @@ color: #ffffff;</string>
       </property>
       <widget class="QWidget" name="selectModePage">
        <layout class="QGridLayout" name="gridLayout_5">
-        <item row="1" column="0">
-         <widget class="QPushButton" name="btnSignMode">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">padding: 20px;
-border-radius: 8px;
-border: 2px solid #eeeeee;</string>
+        <item row="2" column="0">
+         <widget class="QLabel" name="lblSign">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="text">
-           <string/>
+           <string>Sign</string>
           </property>
-          <property name="icon">
-           <iconset resource="icons.qrc">
-            <normaloff>:/icons/icons/sign.svg</normaloff>:/icons/icons/sign.svg</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>64</width>
-            <height>64</height>
-           </size>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -116,6 +99,53 @@ border: 2px solid #eeeeee;</string>
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="btnSignMode">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">padding: 20px;
+border-radius: 8px;
+border: 2px solid #eeeeee;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="icons.qrc">
+            <normaloff>:/icons/icons/sign.svg</normaloff>:/icons/icons/sign.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>64</width>
+            <height>64</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item row="2" column="1">
          <widget class="QLabel" name="lblVerify">
           <property name="font">
@@ -127,23 +157,6 @@ border: 2px solid #eeeeee;</string>
           </property>
           <property name="text">
            <string>Verify</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="lblSign">
-          <property name="font">
-           <font>
-            <pointsize>11</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Sign</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -163,19 +176,6 @@ border: 2px solid #eeeeee;</string>
           </property>
          </spacer>
         </item>
-        <item row="4" column="1">
-         <spacer name="verticalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="signPage1">
@@ -183,54 +183,6 @@ border: 2px solid #eeeeee;</string>
         <property name="horizontalSpacing">
          <number>6</number>
         </property>
-        <item row="4" column="0" colspan="2">
-         <widget class="QTextEdit" name="teMessage">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">padding: 5px;
-border: none;
-border-bottom: 2px solid #29e7cd;
-border-radius: 3px;
-background: rgba(255, 255, 255, 0.1);
-color: #ffffff;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" alignment="Qt::AlignLeft">
-         <widget class="QPushButton" name="btnSelectFile">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background: #61305e;
-font-size: 10pt;
-width: 100px;
-border: 1px solid #29e7cd;
-color: #29e7cd;
-text-transform: uppercase;
-letter-spacing: 1px;
-padding: 6px 0;
-border-radius: 5px;</string>
-          </property>
-          <property name="text">
-           <string>Select</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0" colspan="2">
          <widget class="QLabel" name="lblSelectFile">
           <property name="sizePolicy">
@@ -245,24 +197,6 @@ font: 100 20pt 'Noto Sans';</string>
           </property>
           <property name="text">
            <string>Select a file:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QLabel" name="lblTypeMessage">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';
-margin-top: 20px;</string>
-          </property>
-          <property name="text">
-           <string>Or type a text to sign below:</string>
           </property>
          </widget>
         </item>
@@ -307,6 +241,72 @@ border-bottom: 2px solid #29e7cd;
 border-radius: 3px;
 background: rgba(255, 255, 255, 0.1);
 color: #ffffff;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QLabel" name="lblTypeMessage">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';
+margin-top: 20px;</string>
+          </property>
+          <property name="text">
+           <string>Or type a text to sign below:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="QTextEdit" name="teMessage">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">padding: 5px;
+border: none;
+border-bottom: 2px solid #29e7cd;
+border-radius: 3px;
+background: rgba(255, 255, 255, 0.1);
+color: #ffffff;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="btnSelectFile">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background: #61305e;
+font-size: 10pt;
+width: 100px;
+border: 1px solid #29e7cd;
+color: #29e7cd;
+text-transform: uppercase;
+letter-spacing: 1px;
+padding: 6px 0;
+border-radius: 5px;</string>
+          </property>
+          <property name="text">
+           <string>Select</string>
           </property>
          </widget>
         </item>

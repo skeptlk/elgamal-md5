@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnSignMode, &QPushButton::clicked, this, [=]() {
         ui->stack->setCurrentIndex(signPages[0]);
         ui->stepsWidget->setVisible(true);
+        ui->btnNextStep->setVisible(true);
         setWindowTitle("Signing a new message");
         emit pageChanged(0);
         emit pageCountChanged(signPages.size());
@@ -36,13 +37,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnVerifyMode, &QPushButton::clicked, this, [=]() {
         ui->stack->setCurrentIndex(verifyPages[0]);
         ui->stepsWidget->setVisible(true);
+        ui->btnNextStep->setVisible(true);
         setWindowTitle("Verifying signature");
         emit pageChanged(0);
         emit pageCountChanged(verifyPages.size());
     });
 
     connect(ui->btnSelectFile, &QPushButton::clicked, this, [=]() {
-        fileDialog->exec();
+        fileDialog->setFileMode(QFileDialog::ExistingFile);
+        if (fileDialog->exec()) {
+            QStringList files = fileDialog->selectedFiles();
+            if (files.length() >= 1) {
+                QFileInfo file(files[0]);
+                ui->leSelectedFile->setText(file.fileName());
+            }
+        }
     });
 }
 
