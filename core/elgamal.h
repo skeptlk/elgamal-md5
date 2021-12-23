@@ -120,18 +120,6 @@ ElGamal<BInt>::ElGamal(PrivateKey<BInt> key)
     distr = new std::uniform_real_distribution<float>(0.0, 1.0);
 }
 
-template<>
-ElGamal<boost::multiprecision::cpp_int>::ElGamal(PrivateKey<boost::multiprecision::cpp_int> key)
-{
-    p = key.p;            // big prime
-    alpha = key.alpha;    // primitive root
-    z = key.z;            // secret key
-    beta = boost::multiprecision::powm(alpha, z, p);
-
-    std::random_device rd;
-    eng = new std::default_random_engine(rd());
-    distr = new std::uniform_real_distribution<float>(0.0, 1.0);
-}
 
 template<typename BInt>
 SignedMessage<BInt> ElGamal<BInt>::sign(BInt m) {
@@ -146,23 +134,6 @@ SignedMessage<BInt> ElGamal<BInt>::sign(BInt m) {
 
     return SignedMessage<BInt> { m, r, s };
 }
-
-using boost::multiprecision::cpp_int;
-using boost::multiprecision::powm;
-template<>
-SignedMessage<cpp_int> ElGamal<cpp_int>::sign(cpp_int m) {
-    cpp_int key = keygen(); // key is not stored anywhere!
-    cpp_int r = powm(alpha, key, p);
-    cpp_int inv = inverse<cpp_int>(key, p - 1);
-    cpp_int s = ((cpp_int) m - r * z) % (p - 1);
-    if (s < 0) s += p - 1;
-    s = (s * inv) % (p - 1);
-
-    std::cout << "s=" << s << " m=" << m << " r=" << r << "\n";
-
-    return SignedMessage<cpp_int> { m, r, s };
-}
-
 
 template<typename BInt>
 BInt ElGamal<BInt>::keygen() {
@@ -184,21 +155,6 @@ bool ElGamal<BInt>::verify(SignedMessage<BInt> sign, PublicKey<BInt> pk) {
     return v1 == v2;
 }
 
-template<>
-bool ElGamal<boost::multiprecision::cpp_int>::verify(
-    SignedMessage<boost::multiprecision::cpp_int> sign,
-    PublicKey<boost::multiprecision::cpp_int> pk
-) {
-    using namespace boost::multiprecision;
-    cpp_int v1 = powm(pk.beta, sign.r, pk.p);
-    cpp_int t = powm(sign.r, sign.s, pk.p);
-    v1 *= t;
-    v1 %= pk.p;
-    cpp_int v2 = powm(pk.alpha, sign.m, pk.p);
-
-    return v1 == v2;
-}
-
 template<typename BInt>
 PublicKey<BInt> ElGamal<BInt>::genPublicKey() {
     PublicKey<BInt> pk;
@@ -208,17 +164,5 @@ PublicKey<BInt> ElGamal<BInt>::genPublicKey() {
 
     return pk;
 }
-
-
-template<>
-PublicKey<cpp_int> ElGamal<cpp_int>::genPublicKey() {
-    PublicKey<cpp_int> pk;
-    pk.p = p;
-    pk.alpha = alpha;
-    pk.beta = powm(alpha, z, p);
-
-    return pk;
-}
-
 
 #endif // ELGAMAL_H

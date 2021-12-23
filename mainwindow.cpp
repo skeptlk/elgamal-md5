@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <fstream>
 #include <sstream>
+#include <QRegExpValidator>
 
 
 const QVector<int> signPages = {1, 2, 3};
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
         emit pageCountChanged(verifyPages.size());
     });
 
+    // todo: btnSelectFile_2
     connect(ui->btnSelectFile, &QPushButton::clicked, this, [=]() {
         fileDialog->setFileMode(QFileDialog::ExistingFile);
         if (fileDialog->exec()) {
@@ -62,6 +64,24 @@ MainWindow::MainWindow(QWidget *parent)
             }
         }
     });
+
+    // connect all inputs to validators
+    QList<QString> leNames {"leAlpha", "lePrime", "leZet", "leR", "leS", "leAlpha_2", "leY"};
+    QRegExp rx("\\d+"); // any sequence of digits
+    QValidator *infNumValidator = new QRegExpValidator(rx, this);
+
+    for (const QString &name : leNames) {
+        QLineEdit* lineEdit = findChild<QLineEdit*>(name);
+        QLabel* errorLabel = findChild<QLabel*>(name + "_invalid");
+        lineEdit->setValidator(infNumValidator);
+        // handle end of user input (focus lost?)
+        connect(lineEdit, &QLineEdit::inputRejected, this, &MainWindow::lineEditEditingFinished);
+        // hide error message
+        if (errorLabel) {
+            errorLabel->hide();
+        }
+    }
+
 
     connect(&dataWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showResult);
 
@@ -87,10 +107,23 @@ void MainWindow::prevClick()
     emit prevStep();
 }
 
-
-extern AsyncResult asyncSign(std::string message, std::string filename, PrivateKey privateKey)
+void MainWindow::lineEditEditingFinished()
 {
-    auto el = new ElGamal(privateKey);
+    QObject* obj = sender();
+    QString name = obj->objectName();
+    QLabel* errorMessage = findChild<QLabel*>(name + "_invalid");
+
+    if (errorMessage) {
+        errorMessage->show();
+    }
+}
+
+extern AsyncResult asyncSign(
+        std::string message,
+        std::string filename,
+        PrivateKey<InfInt> privateKey
+) {
+    auto el = new ElGamal<InfInt>(privateKey);
 
     std::istream* inputStream;
     if (message.length() > 0) {
@@ -112,32 +145,15 @@ extern AsyncResult asyncSign(std::string message, std::string filename, PrivateK
     intHash *= InfInt(0x100000000);
     intHash += hash[3];
 
-    SignedMessage sm = el->sign(intHash);
+    SignedMessage<InfInt> sm = el->sign(intHash);
 
-    PublicKey publicKey = el->genPublicKey();
+    PublicKey<InfInt> publicKey = el->genPublicKey();
 
     AsyncResult res;
     res.pk = publicKey;
     res.sm = sm;
     return res;
 }
-
-void MainWindow::showResult()
-{
-    AsyncResult res = dataWatcher.result();
-    std::string smtext = "M = " + res.sm.m.toString() + " (decimal value of hash)\n" +
-            "R = " + res.sm.r.toString() + "\n" +
-            "S = " + res.sm.s.toString() + "\n";
-
-    std::string pktext = "Alpha = " + res.pk.alpha.toString() + "\n" +
-            "Beta = " + res.pk.beta.toString() + "\n" +
-            "Prime = " + res.pk.p.toString() + "\n";
-
-    ui->labelResult_1->setText(QString::fromStdString(smtext));
-    ui->labelResult_2->setText(QString::fromStdString(pktext));
-    ui->loadingSpinner->setVisible(false);
-}
-
 
 
 void MainWindow::createSignatureClick()
@@ -162,7 +178,7 @@ void MainWindow::createSignatureClick()
         file.close();
     }
 
-    PrivateKey privateKey = {
+    PrivateKey<InfInt> privateKey = {
         z.toUInt(),
         p.toUInt(),
         alpha.toUInt(),
@@ -172,6 +188,20 @@ void MainWindow::createSignatureClick()
     dataWatcher.setFuture(f);
 
     f.begin();
-
 }
 
+void MainWindow::showResult()
+{
+    AsyncResult res = dataWatcher.result();
+    std::string smtext = "M = " + res.sm.m.toString() + " (decimal value of hash)\n" +
+            "R = " + res.sm.r.toString() + "\n" +
+            "S = " + res.sm.s.toString() + "\n";
+
+    std::string pktext = "Alpha = " + res.pk.alpha.toString() + "\n" +
+            "Beta = " + res.pk.beta.toString() + "\n" +
+            "Prime = " + res.pk.p.toString() + "\n";
+
+    ui->labelResult_1->setText(QString::fromStdString(smtext));
+    ui->labelResult_2->setText(QString::fromStdString(pktext));
+    ui->loadingSpinner->setVisible(false);
+}

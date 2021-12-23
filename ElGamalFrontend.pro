@@ -14,7 +14,6 @@ CONFIG += c++11
 SOURCES += \
     core/elgamal.cpp \
     core/md5.cpp \
-    loadingspinner.cpp \
     main.cpp \
     mainwindow.cpp \
     stepwidget.cpp

@@ -9,8 +9,8 @@
 #include "core/md5.h"
 
 struct AsyncResult {
-    PublicKey pk;
-    SignedMessage sm;
+    PublicKey<InfInt> pk;
+    SignedMessage<InfInt> sm;
 };
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +39,7 @@ public slots:
     void nextClick();
     void prevClick();
     void createSignatureClick();
+    void lineEditEditingFinished();
 
 signals:
     void pageChanged(int i);
