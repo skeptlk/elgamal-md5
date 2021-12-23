@@ -1,9 +1,10 @@
 QT       += core gui
 QT       += designer
-
+QT       += concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG += console
 CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -13,18 +14,20 @@ CONFIG += c++11
 SOURCES += \
     core/elgamal.cpp \
     core/md5.cpp \
+    loadingspinner.cpp \
     main.cpp \
     mainwindow.cpp \
     stepwidget.cpp
-
 HEADERS += \
     core/InfInt.h \
     core/elgamal.h \
     core/md5.h \
+    loadingspinner.h \
     mainwindow.h \
     stepwidget.h
 
 FORMS += \
+    dialog.ui \
     mainwindow.ui
 
 TRANSLATIONS += \
@@ -39,3 +42,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     icons.qrc
+

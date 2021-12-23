@@ -3,6 +3,15 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QDebug>
+#include <QFutureWatcher>
+#include "core/elgamal.h"
+#include "core/md5.h"
+
+struct AsyncResult {
+    PublicKey pk;
+    SignedMessage sm;
+};
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,14 +30,20 @@ public:
 private:
     Ui::MainWindow *ui;
     Mode mode = MODE_NONE;
+    QString fileName = "";
     QFileDialog* fileDialog;
+    QFutureWatcher<AsyncResult> dataWatcher;
+    void showResult();
 
 public slots:
     void nextClick();
+    void prevClick();
     void createSignatureClick();
 
 signals:
     void pageChanged(int i);
+    void nextStep();
+    void prevStep();
     void pageCountChanged(int i);
 };
 #endif // MAINWINDOW_H

@@ -7,13 +7,14 @@
 #include <QVBoxLayout>
 #include <QRect>
 
+#define NUMBER_OF_STEP 4
+
 class StepWidget : public QWidget
 {
     Q_OBJECT
-    const int count = 3;
     int activeStep = 0;
-    QPushButton* buttons[3];
-    QRect* dashes[3 - 1];
+    QPushButton* buttons[NUMBER_OF_STEP];
+    QRect* dashes[NUMBER_OF_STEP - 1];
 
 public:
     StepWidget(QWidget *parent = 0);

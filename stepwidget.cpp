@@ -42,12 +42,12 @@ StepWidget::StepWidget(QWidget *parent) :
 
 void StepWidget::nextStep()
 {
-    setStep((activeStep + 1) % count);
+    setStep((activeStep + 1) % NUMBER_OF_STEP);
 }
 
 void StepWidget::prevStep()
 {
-    setStep((activeStep - 1 + count) % count);
+    setStep((activeStep - 1 + NUMBER_OF_STEP) % NUMBER_OF_STEP);
 }
 
 void StepWidget::setStep(int i)
