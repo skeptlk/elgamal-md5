@@ -12,7 +12,6 @@ struct AsyncResult {
 
 class ElGamalAdapter
 {
-private:
 public:
     ElGamalAdapter();
     AsyncResult sign(std::istream *input, PrivateKey<InfInt> privkey);

@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->btnNextStep->setVisible(false);
     ui->btnPrevStep->setVisible(false);
 
+    ui->loadingSpinner->setVisible(false);
+    ui->loadingSpinner->setVisible(false);
+
     fileDialog = new QFileDialog(this);
     fileDialog->setFileMode(QFileDialog::ExistingFile);
 
@@ -25,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::nextStep, ui->stepsWidget, &StepWidget::nextStep);
     connect(this, &MainWindow::prevStep, ui->stepsWidget, &StepWidget::prevStep);
     connect(ui->btnCreateSignature, SIGNAL(clicked()), this, SLOT(createSignatureClick()));
+    connect(ui->btnVerify, SIGNAL(clicked()), this, SLOT(verifySignatureClick()));
 
 
     connect(ui->btnSignMode, &QPushButton::clicked, this, [=]() {
@@ -51,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnSelectFile,   &QPushButton::clicked, this, &MainWindow::onFileSelected);
 
     // connect all inputs to validators
-    QList<QString> leNames {"leAlpha", "lePrime", "leZet", "leR", "leS", "leAlpha_2", "leY"};
+    QList<QString> leNames {"leAlpha", "lePrime", "lePrime_2", "leZet", "leR", "leS", "leAlpha_2", "leY"};
     QRegExp rx("\\d+"); // any sequence of digits
     infNumValidator = new QRegExpValidator(rx, this);
 
@@ -68,7 +72,8 @@ MainWindow::MainWindow(QWidget *parent)
         connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::lineEditAccepted);
     }
 
-    connect(&resultWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showResult);
+    connect(&signAsyncWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showSignResult);
+    connect(&verifyAsyncWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showVerifyResult);
 
     ui->loadingSpinner->setVisible(false);
 }
@@ -133,6 +138,7 @@ void MainWindow::onFileSelected() {
 
     filePath = file.absolutePath();
     ui->leSelectedFile->setText(file.fileName());
+    ui->leSelectedFile2->setText(file.fileName());
 }
 
 extern AsyncResult asyncSign(
@@ -154,14 +160,76 @@ extern AsyncResult asyncSign(
     return adapter.sign(inputStream, privateKey);
 }
 
+extern bool asyncVerify(
+        std::string message,
+        std::string filename,
+        SignedMessage<InfInt> signedMessage,
+        PublicKey<InfInt> publicKey
+) {
+    std::istream* inputStream;
+    if (message.length() > 0) {
+        std::ifstream file(filename);
+        inputStream = &file;
+    }
+    else {
+        std::istringstream ss(message);
+        inputStream = &ss;
+    }
+
+    ElGamalAdapter adapter;
+    return adapter.verify(inputStream, signedMessage, publicKey);
+}
+
 void MainWindow::verifySignatureClick()
 {
-    ui->loadingSpinner2->setVisible(true);
-    ui->loadingSpinner2->setVisible(false);
+    elapsedTimer.start();
+
+    // collect signature components
+    QString p = ui->lePrime_2->text(),
+            y = ui->leY->text(),
+            alpha = ui->leAlpha_2->text(),
+            r = ui->leR->text(),
+            s = ui->leS->text(),
+            message = ui->teMessage2->toPlainText();
+
+    if (filePath.size() > 0) {
+        std::ifstream file(filePath.toStdString());
+        if(!file.is_open()) {
+            QMessageBox messageBox;
+            messageBox.critical(0, "Error", "Can't open file!");
+            messageBox.setFixedSize(500,200);
+            messageBox.show();
+            return;
+        }
+        file.close();
+    }
+
+    SignedMessage<InfInt> signedMessage = {
+        0,
+        InfInt(r.toStdString()),
+        InfInt(s.toStdString()),
+    };
+
+    PublicKey<InfInt> publicKey = {
+        InfInt(p.toStdString()),
+        InfInt(alpha.toStdString()),
+        InfInt(y.toStdString()),
+    };
+
+    QFuture<bool> f = QtConcurrent::run(
+                asyncVerify,
+                message.toStdString(),
+                filePath.toStdString(),
+                signedMessage,
+                publicKey
+    );
+    verifyAsyncWatcher.setFuture(f);
+    f.begin();
 }
 
 void MainWindow::createSignatureClick()
 {
+    elapsedTimer.start();
     ui->loadingSpinner->setVisible(true);
 
     // collect signature components
@@ -189,23 +257,33 @@ void MainWindow::createSignatureClick()
     };
 
     QFuture<AsyncResult> f = QtConcurrent::run(asyncSign, message.toStdString(), filePath.toStdString(), privateKey);
-    resultWatcher.setFuture(f);
-
+    signAsyncWatcher.setFuture(f);
     f.begin();
 }
 
-void MainWindow::showResult()
+void MainWindow::showSignResult()
 {
-    AsyncResult res = resultWatcher.result();
-    std::string smtext = "M = " + res.sm.m.toString() + " (decimal value of hash)\n" +
-            "R = " + res.sm.r.toString() + "\n" +
-            "S = " + res.sm.s.toString() + "\n";
+    AsyncResult res = signAsyncWatcher.result();
+    QString smtext = "M = " + QString::fromStdString(res.sm.m.toString()) + " (decimal value of hash)\n" +
+            "R = " + QString::fromStdString(res.sm.r.toString()) + "\n" +
+            "S = " + QString::fromStdString(res.sm.s.toString()) + "\n";
 
-    std::string pktext = "Alpha = " + res.pk.alpha.toString() + "\n" +
-            "Beta = " + res.pk.beta.toString() + "\n" +
-            "Prime = " + res.pk.p.toString() + "\n";
+    QString pktext = "Alpha = " + QString::fromStdString(res.pk.alpha.toString()) + "\n" +
+            "Beta = " + QString::fromStdString(res.pk.beta.toString()) + "\n" +
+            "Prime = " + QString::fromStdString(res.pk.p.toString()) + "\n";
 
-    ui->labelResult_1->setText(QString::fromStdString(smtext));
-    ui->labelResult_2->setText(QString::fromStdString(pktext));
+    ui->labelResult_1->setText(smtext);
+    ui->labelResult_2->setText(pktext);
+
     ui->loadingSpinner->setVisible(false);
+    ui->lbElapsedTime->setText("Elapsed time: " + QString::number(elapsedTimer.elapsed()) + " ms");
+}
+
+void MainWindow::showVerifyResult()
+{
+    bool res = verifyAsyncWatcher.result();
+
+    ui->lbVerificationResult->setText(res ? "Valid" : "Invalid");
+
+    ui->lbElapsedTime2->setText("Elapsed time: " + QString::number(elapsedTimer.elapsed()) + " ms");
 }

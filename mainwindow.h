@@ -9,6 +9,7 @@
 #include <QtConcurrent>
 #include <QMessageBox>
 #include <QRegExpValidator>
+#include <QElapsedTimer>
 #include <fstream>
 #include <sstream>
 #include "core/elgamal.h"
@@ -36,8 +37,11 @@ private:
     QString filePath = "";
     QFileDialog *fileDialog;
     QValidator *infNumValidator;
-    QFutureWatcher<AsyncResult> resultWatcher;
-    void showResult();
+    QFutureWatcher<AsyncResult> signAsyncWatcher;
+    QFutureWatcher<bool> verifyAsyncWatcher;
+    QElapsedTimer elapsedTimer;
+    void showSignResult();
+    void showVerifyResult();
 
 public slots:
     void nextClick();
