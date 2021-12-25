@@ -1,11 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QFuture>
-#include <QtConcurrent>
-#include <QMessageBox>
-#include <fstream>
-#include <sstream>
-#include <QRegExpValidator>
 
 
 const QVector<int> signPages = {1, 2, 3};
@@ -23,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->btnPrevStep->setVisible(false);
 
     fileDialog = new QFileDialog(this);
-    fileDialog->setFileMode(QFileDialog::AnyFile);
+    fileDialog->setFileMode(QFileDialog::ExistingFile);
 
     connect(ui->btnNextStep, SIGNAL(clicked()), this, SLOT(nextClick()));
     connect(ui->btnPrevStep, SIGNAL(clicked()), this, SLOT(prevClick()));
@@ -53,43 +47,36 @@ MainWindow::MainWindow(QWidget *parent)
         emit pageCountChanged(verifyPages.size());
     });
 
-    // todo: btnSelectFile_2
-    connect(ui->btnSelectFile, &QPushButton::clicked, this, [=]() {
-        fileDialog->setFileMode(QFileDialog::ExistingFile);
-        if (fileDialog->exec()) {
-            QStringList files = fileDialog->selectedFiles();
-            if (files.length() >= 1) {
-                QFileInfo file(files[0]);
-                ui->leSelectedFile->setText(file.fileName());
-            }
-        }
-    });
+    connect(ui->btnSelectFile_2, &QPushButton::clicked, this, &MainWindow::onFileSelected);
+    connect(ui->btnSelectFile,   &QPushButton::clicked, this, &MainWindow::onFileSelected);
 
     // connect all inputs to validators
     QList<QString> leNames {"leAlpha", "lePrime", "leZet", "leR", "leS", "leAlpha_2", "leY"};
     QRegExp rx("\\d+"); // any sequence of digits
-    QValidator *infNumValidator = new QRegExpValidator(rx, this);
+    infNumValidator = new QRegExpValidator(rx, this);
 
     for (const QString &name : leNames) {
         QLineEdit* lineEdit = findChild<QLineEdit*>(name);
         QLabel* errorLabel = findChild<QLabel*>(name + "_invalid");
-        lineEdit->setValidator(infNumValidator);
-        // handle end of user input (focus lost?)
-        connect(lineEdit, &QLineEdit::inputRejected, this, &MainWindow::lineEditEditingFinished);
         // hide error message
         if (errorLabel) {
             errorLabel->hide();
         }
+        lineEdit->setValidator(infNumValidator);
+        // handle end of user input (focus lost?)
+        connect(lineEdit, &QLineEdit::inputRejected,   this, &MainWindow::lineEditRejected);
+        connect(lineEdit, &QLineEdit::editingFinished, this, &MainWindow::lineEditAccepted);
     }
 
-
-    connect(&dataWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showResult);
+    connect(&resultWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showResult);
 
     ui->loadingSpinner->setVisible(false);
 }
 
 MainWindow::~MainWindow()
 {
+    delete infNumValidator;
+    delete fileDialog;
     delete ui;
 }
 
@@ -107,15 +94,45 @@ void MainWindow::prevClick()
     emit prevStep();
 }
 
-void MainWindow::lineEditEditingFinished()
+void MainWindow::lineEditRejected()
 {
-    QObject* obj = sender();
-    QString name = obj->objectName();
+    QString name = sender()->objectName();
     QLabel* errorMessage = findChild<QLabel*>(name + "_invalid");
 
-    if (errorMessage) {
+    if (errorMessage)
         errorMessage->show();
+}
+
+void MainWindow::lineEditAccepted()
+{
+    QString name = sender()->objectName();
+    QLabel* errorMessage = findChild<QLabel*>(name + "_invalid");
+
+    if (errorMessage)
+        errorMessage->hide();
+}
+
+void MainWindow::onFileSelected() {
+    if (!fileDialog->exec()) return;
+
+    QStringList files = fileDialog->selectedFiles();
+    if (files.length() <= 0) return;
+
+    QFileInfo file(files[0]);
+
+    // check if we can open file
+    std::ifstream fileStream(file.absolutePath().toStdString());
+    if(!fileStream.is_open()) {
+        QMessageBox messageBox;
+        messageBox.critical(0, "Error", "Can't open file!");
+        messageBox.setFixedSize(500, 200);
+        messageBox.show();
+        return;
     }
+    fileStream.close();
+
+    filePath = file.absolutePath();
+    ui->leSelectedFile->setText(file.fileName());
 }
 
 extern AsyncResult asyncSign(
@@ -123,8 +140,6 @@ extern AsyncResult asyncSign(
         std::string filename,
         PrivateKey<InfInt> privateKey
 ) {
-    auto el = new ElGamal<InfInt>(privateKey);
-
     std::istream* inputStream;
     if (message.length() > 0) {
         std::ifstream file(filename);
@@ -135,26 +150,15 @@ extern AsyncResult asyncSign(
         inputStream = &ss;
     }
 
-    uint32_t *hash = md5(inputStream);
-
-    InfInt intHash = hash[0];
-    intHash *= InfInt(0x100000000);
-    intHash += hash[1];
-    intHash *= InfInt(0x100000000);
-    intHash += hash[2];
-    intHash *= InfInt(0x100000000);
-    intHash += hash[3];
-
-    SignedMessage<InfInt> sm = el->sign(intHash);
-
-    PublicKey<InfInt> publicKey = el->genPublicKey();
-
-    AsyncResult res;
-    res.pk = publicKey;
-    res.sm = sm;
-    return res;
+    ElGamalAdapter adapter;
+    return adapter.sign(inputStream, privateKey);
 }
 
+void MainWindow::verifySignatureClick()
+{
+    ui->loadingSpinner2->setVisible(true);
+    ui->loadingSpinner2->setVisible(false);
+}
 
 void MainWindow::createSignatureClick()
 {
@@ -166,8 +170,8 @@ void MainWindow::createSignatureClick()
             z = ui->leZet->text(),
             message = ui->teMessage->toPlainText();
 
-    if (fileName.size() > 0) {
-        std::ifstream file(fileName.toStdString());
+    if (filePath.size() > 0) {
+        std::ifstream file(filePath.toStdString());
         if(!file.is_open()) {
             QMessageBox messageBox;
             messageBox.critical(0, "Error", "Can't open file!");
@@ -184,15 +188,15 @@ void MainWindow::createSignatureClick()
         alpha.toUInt(),
     };
 
-    QFuture<AsyncResult> f = QtConcurrent::run(asyncSign, message.toStdString(), fileName.toStdString(), privateKey);
-    dataWatcher.setFuture(f);
+    QFuture<AsyncResult> f = QtConcurrent::run(asyncSign, message.toStdString(), filePath.toStdString(), privateKey);
+    resultWatcher.setFuture(f);
 
     f.begin();
 }
 
 void MainWindow::showResult()
 {
-    AsyncResult res = dataWatcher.result();
+    AsyncResult res = resultWatcher.result();
     std::string smtext = "M = " + res.sm.m.toString() + " (decimal value of hash)\n" +
             "R = " + res.sm.r.toString() + "\n" +
             "S = " + res.sm.s.toString() + "\n";

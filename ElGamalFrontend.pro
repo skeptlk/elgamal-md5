@@ -14,6 +14,7 @@ CONFIG += c++11
 SOURCES += \
     core/elgamal.cpp \
     core/md5.cpp \
+    elgamaladapter.cpp \
     main.cpp \
     mainwindow.cpp \
     stepwidget.cpp
@@ -21,6 +22,7 @@ HEADERS += \
     core/InfInt.h \
     core/elgamal.h \
     core/md5.h \
+    elgamaladapter.h \
     loadingspinner.h \
     mainwindow.h \
     stepwidget.h

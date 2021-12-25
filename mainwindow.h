@@ -5,13 +5,15 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QFutureWatcher>
+#include <QFuture>
+#include <QtConcurrent>
+#include <QMessageBox>
+#include <QRegExpValidator>
+#include <fstream>
+#include <sstream>
 #include "core/elgamal.h"
 #include "core/md5.h"
-
-struct AsyncResult {
-    PublicKey<InfInt> pk;
-    SignedMessage<InfInt> sm;
-};
+#include "elgamaladapter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,16 +32,21 @@ public:
 private:
     Ui::MainWindow *ui;
     Mode mode = MODE_NONE;
-    QString fileName = "";
-    QFileDialog* fileDialog;
-    QFutureWatcher<AsyncResult> dataWatcher;
+    ElGamalAdapter *elgamalAdapter;
+    QString filePath = "";
+    QFileDialog *fileDialog;
+    QValidator *infNumValidator;
+    QFutureWatcher<AsyncResult> resultWatcher;
     void showResult();
 
 public slots:
     void nextClick();
     void prevClick();
     void createSignatureClick();
-    void lineEditEditingFinished();
+    void verifySignatureClick();
+    void lineEditRejected();
+    void lineEditAccepted();
+    void onFileSelected();
 
 signals:
     void pageChanged(int i);
