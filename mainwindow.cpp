@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->btnNextStep->setVisible(false);
     ui->btnPrevStep->setVisible(false);
 
-    ui->loadingSpinner->setVisible(false);
-    ui->loadingSpinner->setVisible(false);
+    ui->loadingSpinnerSign->setVisible(false);
+    ui->loadingSpinnerVerify->setVisible(false);
 
     fileDialog = new QFileDialog(this);
     fileDialog->setFileMode(QFileDialog::ExistingFile);
@@ -74,8 +74,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&signAsyncWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showSignResult);
     connect(&verifyAsyncWatcher, &QFutureWatcher<AsyncResult>::finished, this, &MainWindow::showVerifyResult);
-
-    ui->loadingSpinner->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -183,6 +181,7 @@ extern bool asyncVerify(
 void MainWindow::verifySignatureClick()
 {
     elapsedTimer.start();
+    ui->loadingSpinnerVerify->setVisible(true);
 
     // collect signature components
     QString p = ui->lePrime_2->text(),
@@ -197,7 +196,7 @@ void MainWindow::verifySignatureClick()
         if(!file.is_open()) {
             QMessageBox messageBox;
             messageBox.critical(0, "Error", "Can't open file!");
-            messageBox.setFixedSize(500,200);
+            messageBox.setFixedSize(500, 200);
             messageBox.show();
             return;
         }
@@ -209,13 +208,11 @@ void MainWindow::verifySignatureClick()
         InfInt(r.toStdString()),
         InfInt(s.toStdString()),
     };
-
     PublicKey<InfInt> publicKey = {
         InfInt(p.toStdString()),
         InfInt(alpha.toStdString()),
         InfInt(y.toStdString()),
     };
-
     QFuture<bool> f = QtConcurrent::run(
                 asyncVerify,
                 message.toStdString(),
@@ -230,13 +227,13 @@ void MainWindow::verifySignatureClick()
 void MainWindow::createSignatureClick()
 {
     elapsedTimer.start();
-    ui->loadingSpinner->setVisible(true);
+    ui->loadingSpinnerSign->setVisible(true);
 
     // collect signature components
-    QString p = ui->lePrime->text(),
-            alpha = ui->leAlpha->text(),
-            z = ui->leZet->text(),
-            message = ui->teMessage->toPlainText();
+    std::string p = ui->lePrime->text().toStdString(),
+            alpha = ui->leAlpha->text().toStdString(),
+            z = ui->leZet->text().toStdString(),
+            message = ui->teMessage->toPlainText().toStdString();
 
     if (filePath.size() > 0) {
         std::ifstream file(filePath.toStdString());
@@ -251,12 +248,12 @@ void MainWindow::createSignatureClick()
     }
 
     PrivateKey<InfInt> privateKey = {
-        z.toUInt(),
-        p.toUInt(),
-        alpha.toUInt(),
+        InfInt(z),
+        InfInt(p),
+        InfInt(alpha),
     };
 
-    QFuture<AsyncResult> f = QtConcurrent::run(asyncSign, message.toStdString(), filePath.toStdString(), privateKey);
+    QFuture<AsyncResult> f = QtConcurrent::run(asyncSign, message, filePath.toStdString(), privateKey);
     signAsyncWatcher.setFuture(f);
     f.begin();
 }
@@ -275,7 +272,7 @@ void MainWindow::showSignResult()
     ui->labelResult_1->setText(smtext);
     ui->labelResult_2->setText(pktext);
 
-    ui->loadingSpinner->setVisible(false);
+    ui->loadingSpinnerSign->setVisible(false);
     ui->lbElapsedTime->setText("Elapsed time: " + QString::number(elapsedTimer.elapsed()) + " ms");
 }
 
@@ -285,5 +282,6 @@ void MainWindow::showVerifyResult()
 
     ui->lbVerificationResult->setText(res ? "Valid" : "Invalid");
 
+    ui->loadingSpinnerVerify->setVisible(false);
     ui->lbElapsedTime2->setText("Elapsed time: " + QString::number(elapsedTimer.elapsed()) + " ms");
 }

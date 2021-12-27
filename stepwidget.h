@@ -2,10 +2,9 @@
 #define STEPSWIDGET_H
 
 #include <QWidget>
-#include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QRect>
+
 
 #define NUMBER_OF_STEP 4
 

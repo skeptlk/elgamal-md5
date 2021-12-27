@@ -25,8 +25,9 @@ const QString activeStyle = "QPushButton {"\
 StepWidget::StepWidget(QWidget *parent) :
     QWidget(parent)
 {
-    auto layout = new QVBoxLayout(this);
-    layout->setMargin(0);
+    auto layout = new QHBoxLayout(this);
+    layout->setAlignment(Qt::AlignHCenter);
+    layout->setContentsMargins(50, 0, 50, 100);
 
     for (int i = 0; i < 3; i++) {
         buttons[i] = new QPushButton(QString::number(i));

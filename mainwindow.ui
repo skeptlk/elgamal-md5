@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>758</width>
-    <height>502</height>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,32 +25,19 @@ color: #ffffff;</string>
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="1" column="1">
-     <widget class="QPushButton" name="btnPrevStep">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background: #61305e;
-font-size: 10pt;
-width: 100px;
-border: 1px solid #29e7cd;
-color: #29e7cd;
-text-transform: uppercase;
-letter-spacing: 1px;
-padding: 6px 0;
-border-radius: 5px;
-margin-right: 30px;</string>
-      </property>
-      <property name="text">
-       <string>Back</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
+    <property name="leftMargin">
+     <number>25</number>
+    </property>
+    <property name="topMargin">
+     <number>25</number>
+    </property>
+    <property name="rightMargin">
+     <number>25</number>
+    </property>
+    <property name="bottomMargin">
+     <number>25</number>
+    </property>
+    <item row="2" column="2">
      <widget class="QPushButton" name="btnNextStep">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -75,13 +62,57 @@ margin-right: 30px;</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1" colspan="3">
+    <item row="0" column="0" colspan="3">
+     <widget class="StepWidget" name="stepsWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">margin-bottom: 50px;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <widget class="QPushButton" name="btnPrevStep">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: #61305e;
+font-size: 10pt;
+width: 100px;
+border: 1px solid #29e7cd;
+color: #29e7cd;
+text-transform: uppercase;
+letter-spacing: 1px;
+padding: 6px 0;
+border-radius: 5px;
+margin-right: 30px;</string>
+      </property>
+      <property name="text">
+       <string>Back</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="3">
      <widget class="QStackedWidget" name="stack">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">margin-right: 30px;</string>
+       <string notr="true"/>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -217,29 +248,52 @@ border: 2px solid #eeeeee;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="signPage1">
-       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
         <property name="horizontalSpacing">
          <number>6</number>
         </property>
-        <item row="2" column="0">
-         <widget class="QLineEdit" name="leSelectedFile">
+        <item row="4" column="0">
+         <widget class="QLabel" name="lblTypeMessage">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>250</width>
-            <height>0</height>
-           </size>
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';
+margin-top: 20px;</string>
           </property>
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-            <bold>true</bold>
-           </font>
+          <property name="text">
+           <string>Or type a text to sign below:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="lblSelectFile">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>Select a file:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QTextEdit" name="teMessage">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
           <property name="styleSheet">
            <string notr="true">padding: 5px;
@@ -251,7 +305,7 @@ color: #ffffff;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QPushButton" name="btnSelectFile">
           <property name="enabled">
            <bool>true</bool>
@@ -281,44 +335,38 @@ border-radius: 5px;</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <spacer name="verticalSpacer">
+        <item row="3" column="2">
+         <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>40</width>
+            <height>20</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QLabel" name="lblTypeMessage">
+        <item row="3" column="0">
+         <widget class="QLineEdit" name="leSelectedFile">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';
-margin-top: 20px;</string>
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
           </property>
-          <property name="text">
-           <string>Or type a text to sign below:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2">
-         <widget class="QTextEdit" name="teMessage">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="styleSheet">
            <string notr="true">padding: 5px;
@@ -330,60 +378,43 @@ color: #ffffff;</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QLabel" name="lblSelectFile">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Select a file:</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="signPage2">
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="4" column="0">
-         <widget class="QLabel" name="label4">
+        <item row="5" column="0">
+         <widget class="QLineEdit" name="leAlpha">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-margin-top: 15px;
-font: 100 12pt 'Noto Sans';</string>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
           </property>
-          <property name="text">
-           <string>Alpha (primitive root)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-margin-top: 15px;
-font: 100 12pt 'Noto Sans';</string>
+           <string notr="true">padding: 5px;
+border: none;
+border-bottom: 2px solid #29e7cd;
+border-radius: 3px;
+background: rgba(255, 255, 255, 0.1);
+color: #ffffff;</string>
           </property>
           <property name="text">
-           <string>P (very large prime)</string>
+           <string>12345</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -423,76 +454,6 @@ color: #ffffff;</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QLineEdit" name="leAlpha">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">padding: 5px;
-border: none;
-border-bottom: 2px solid #29e7cd;
-border-radius: 3px;
-background: rgba(255, 255, 255, 0.1);
-color: #ffffff;</string>
-          </property>
-          <property name="text">
-           <string>12345</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="3">
-         <widget class="QLabel" name="label">
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Private key components:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QLabel" name="lePrime_invalid">
-          <property name="styleSheet">
-           <string notr="true">color: #f75268		</string>
-          </property>
-          <property name="text">
-           <string>Positive prime number required</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <spacer name="verticalSpacer2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="4" column="1">
          <widget class="QLabel" name="label5">
           <property name="sizePolicy">
@@ -508,6 +469,17 @@ font: 100 12pt 'Noto Sans';</string>
           </property>
           <property name="text">
            <string>Z (secret integer)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="3">
+         <widget class="QLabel" name="label">
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>Private key components:</string>
           </property>
          </widget>
         </item>
@@ -557,6 +529,24 @@ color: #ffffff;</string>
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+margin-top: 15px;
+font: 100 12pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>P (very large prime)</string>
+          </property>
+         </widget>
+        </item>
         <item row="6" column="1">
          <widget class="QLabel" name="leZet_invalid">
           <property name="styleSheet">
@@ -567,49 +557,26 @@ color: #ffffff;</string>
           </property>
          </widget>
         </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="signPage3">
-       <layout class="QGridLayout" name="gridLayout_4">
         <item row="4" column="0">
-         <widget class="QLabel" name="labelResult_1">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>?</string>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="LoadingSpinner" name="loadingSpinner">
+         <widget class="QLabel" name="label4">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>46</height>
-           </size>
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+margin-top: 15px;
+font: 100 12pt 'Noto Sans';</string>
           </property>
           <property name="text">
-           <string>TextLabel</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <string>Alpha (primitive root)</string>
           </property>
          </widget>
         </item>
         <item row="7" column="0">
-         <spacer name="verticalSpacer3">
+         <spacer name="verticalSpacer2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -621,35 +588,33 @@ color: #ffffff;</string>
           </property>
          </spacer>
         </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QLabel" name="lePrime_invalid">
+          <property name="styleSheet">
+           <string notr="true">color: #f75268		</string>
+          </property>
+          <property name="text">
+           <string>Positive prime number required</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="signPage3">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="6" column="0">
+         <widget class="QLabel" name="lbElapsedTime">
+          <property name="text">
+           <string>Elapsed time:</string>
+          </property>
+         </widget>
+        </item>
         <item row="5" column="0">
-         <widget class="QLabel" name="labelResult_2">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label6">
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Click button below to create signature:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label6_2">
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Result: </string>
+         <widget class="QTextEdit" name="labelResult_2">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
           </property>
          </widget>
         </item>
@@ -678,12 +643,78 @@ margin-top: 30px;</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="lbElapsedTime">
+        <item row="2" column="0">
+         <widget class="LoadingSpinner" name="loadingSpinnerSign">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>46</height>
+           </size>
+          </property>
           <property name="text">
-           <string>Elapsed time:</string>
+           <string>TextLabel</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label6_2">
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>Result: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <spacer name="verticalSpacer3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label6">
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>Click button below to create signature:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QTextEdit" name="labelResult_1"/>
         </item>
        </layout>
       </widget>
@@ -692,6 +723,41 @@ margin-top: 30px;</string>
         <property name="verticalSpacing">
          <number>6</number>
         </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>Select a file:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';</string>
+          </property>
+          <property name="text">
+           <string>Or type a text to verify below:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item row="1" column="0">
          <widget class="QLineEdit" name="leSelectedFile2">
           <property name="sizePolicy">
@@ -724,54 +790,6 @@ border-bottom: 2px solid #29e7cd;
 border-radius: 3px;
 background: rgba(255, 255, 255, 0.1);
 color: #ffffff;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Or type a text to verify below:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Select a file:</string>
           </property>
          </widget>
         </item>
@@ -1057,87 +1075,10 @@ font: 100 20pt 'Noto Sans';</string>
       </widget>
       <widget class="QWidget" name="verifyPage3">
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="3" column="0">
-         <widget class="QLabel" name="lbVerificationResult">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>48</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>?</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="labelresult">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>48</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <italic>false</italic>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 100 12pt 'Noto Sans';</string>
-          </property>
-          <property name="text">
-           <string>Result:</string>
-          </property>
-         </widget>
-        </item>
         <item row="5" column="0">
-         <spacer name="verticalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_10">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: #ffffff;
-font: 100 20pt 'Noto Sans';
-</string>
-          </property>
+         <widget class="QLabel" name="lbElapsedTime2">
           <property name="text">
-           <string>Click below to verify signature:</string>
+           <string>Elapsed time: </string>
           </property>
          </widget>
         </item>
@@ -1166,38 +1107,111 @@ margin-top: 30px;</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="lbElapsedTime2">
+        <item row="3" column="0">
+         <widget class="QLabel" name="labelresult">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>48</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 100 12pt 'Noto Sans';</string>
+          </property>
           <property name="text">
-           <string>Elapsed time: </string>
+           <string>Result:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #ffffff;
+font: 100 20pt 'Noto Sans';
+</string>
+          </property>
+          <property name="text">
+           <string>Click below to verify signature:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="lbVerificationResult">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>48</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>?</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <spacer name="verticalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="LoadingSpinner" name="loadingSpinnerVerify">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>TextLabel</string>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="0">
-     <widget class="StepWidget" name="stepsWidget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
      </widget>
     </item>
    </layout>

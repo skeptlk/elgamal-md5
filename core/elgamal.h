@@ -137,12 +137,11 @@ SignedMessage<BInt> ElGamal<BInt>::sign(BInt m) {
 
 template<typename BInt>
 BInt ElGamal<BInt>::keygen() {
-    return 31;
     BInt k;
     do {
         k = (p * int(10000 * (*distr)(*eng))) / int(10000 * (*distr)(*eng));
-        k %= p;
-    } while (k <= 0 || gcd(k, p - 1) != 1);
+        k %= p; // gcd(k, p - 1) != 1
+    } while (k <= 0);
     return k;
 }
 
